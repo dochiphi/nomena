@@ -1,8 +1,10 @@
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-require("dotenv").config();
-const { Configuration, OpenAIApi } = require("openai");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import { Configuration, OpenAIApi } from "openai";
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,7 +30,7 @@ app.post("/generate", async (req, res) => {
     });
 
     const result = response.data.choices[0].message.content;
-    res.json({ names: result.split("\n").filter(name => name.trim() !== "") });
+    res.json({ names: result.split("\n").filter((name) => name.trim() !== "") });
   } catch (err) {
     console.error(err);
     res.status(500).send("Error generating names");
