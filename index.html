@@ -1,109 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NameSpark.AI</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      color: #111;
-    }
-    header {
-      background: #4f46e5;
-      color: white;
-      padding: 2rem 1rem;
-    }
-    .container {
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    input, select, button {
-      padding: 0.75rem;
-      margin: 0.5rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .results {
-      margin-top: 2rem;
-    }
-    .name-card {
-      background: white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin: 1rem auto;
-      padding: 1rem;
-      border-radius: 12px;
-      width: 80%;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>NameSpark.AI</h1>
-    <p>The spark behind your next big idea.</p>
-  </header>
+<script>
+  async function generateNames() {
+    const industry = document.getElementById("industry").value;
+    const style = document.getElementById("style").value;
+    const keywords = document.getElementById("keywords").value;
 
-  <div class="container">
-    <select id="industry">
-      <option value="tech">Tech</option>
-      <option value="fashion">Fashion</option>
-      <option value="food">Food</option>
-      <option value="finance">Finance</option>
-    </select>
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "Loading...";
 
-    <select id="style">
-      <option value="modern">Modern</option>
-      <option value="creative">Creative</option>
-      <option value="professional">Professional</option>
-    </select>
+    const prompt = `Generate 5 ${style} company names for a ${industry} business with the following keywords: ${keywords}.`;
 
-    <input type="text" id="keywords" placeholder="Enter keywords" />
-    <br />
-    <button onclick="generateNames()">Generate Name 🔥</button>
+    try {
+      const response = await fetch("https://api.textcortex.com/hemingwai/generate_text_v3", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer gAAAAABn4dossf9hnIxqPthp-MhbntAWdioIOol_qgqXV68qlZSZROoL3shxdru-1XtfDEDmBNbymtUphCh-EEYDy1FYe5OZJu9_wIzsWe_AMsJULJep-RuCDgeqQIsqpdGhOMIzM8NAT5lBhB_wEYg7by7K72n-LCnWl6axacUj1mEzXQiP_xI=" // Replace with your actual API key
+        },
+        body: JSON.stringify({
+          prompt: prompt,
+          parameters: {
+            temperature: 0.7,
+            max_tokens: 50
+          }
+        })
+      });
 
-    <div class="results" id="results"></div>
-  </div>
-
-  <script>
-    async function generateNames() {
-      const industry = document.getElementById("industry").value;
-      const style = document.getElementById("style").value;
-      const keywords = document.getElementById("keywords").value;
-
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "Loading...";
-
-      // Use mock data (free and works offline)
-      const fakeNames = [
-        `${keywords}Nova`,
-        `${style.charAt(0).toUpperCase() + style.slice(1)}ly`,
-        `${industry}Labz`,
-        `Neo${keywords}`,
-        `Spark${industry.charAt(0).toUpperCase() + industry.slice(1)}`
-      ];
-
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+      const data = await response.json();
       resultsDiv.innerHTML = "";
 
-      fakeNames.forEach(name => {
-        const card = document.createElement("div");
-        card.className = "name-card";
-        card.textContent = name;
-        resultsDiv.appendChild(card);
-      });
+      if (data.output) {
+        const names = data.output.split("\n").filter(line => line.trim() !== "");
+        names.forEach(name => {
+          const card = document.createElement("div");
+          card.className = "name-card";
+          card.textContent = name.trim();
+          resultsDiv.appendChild(card);
+        });
+      } else {
+        resultsDiv.innerHTML = "No names generated. Please try again.";
+      }
+    } catch (error) {
+      console.error("Error generating names:", error);
+      resultsDiv.innerHTML = "An error occurred while generating names.";
     }
-  </script>
-</body>
-</html>
+  }
+</script>
