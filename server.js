@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
 dotenv.config();
 
@@ -12,10 +12,9 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 app.post("/generate", async (req, res) => {
   const { industry, style, keywords } = req.body;
@@ -23,13 +22,13 @@ app.post("/generate", async (req, res) => {
   const prompt = `Suggest 5 unique and creative brand name ideas for a ${style} ${industry} business using these keywords: ${keywords}.`;
 
   try {
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.9,
     });
 
-    const result = response.data.choices[0].message.content;
+    const result = response.choices[0].message.content;
     res.json({ names: result.split("\n").filter((name) => name.trim() !== "") });
   } catch (err) {
     console.error(err);
