@@ -1,1 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NameSpark.AI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9fafb;
+      color: #111;
+      text-align: center;
+    }
+    header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 2rem 1rem;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      margin: 2rem auto;
+      max-width: 800px;
+      padding: 0 1rem;
+    }
+    input, select, button {
+      padding: 0.75rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .results {
+      margin-top: 2rem;
+    }
+    .name-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin: 1rem auto;
+      padding: 1rem;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NameSpark.AI</h1>
+    <p>The spark behind your next big idea.</p>
+  </header>
+
+  <div class="container">
+    <select id="industry">
+      <option value="tech">Tech</option>
+      <option value="fashion">Fashion</option>
+      <option value="food">Food</option>
+      <option value="finance">Finance</option>
+    </select>
+
+    <select id="style">
+      <option value="modern">Modern</option>
+      <option value="creative">Creative</option>
+      <option value="professional">Professional</option>
+    </select>
+
+    <input type="text" id="keywords" placeholder="Enter keywords" />
+    <br />
+    <button onclick="generateNames()">Generate Name 🔥</button>
+
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    function generateNames() {
+      const industry = document.getElementById("industry").value;
+      const style = document.getElementById("style").value;
+      const keywords = document.getElementById("keywords").value;
+
+      // Fake results for now (no API yet)
+      const suggestions = [
+        "BrandNova", "QuantumBloom", "AeroLuxe", "Zenithify", "NovaNest"
+      ];
+
+      const resultsDiv = document.getElementById("results");
+      resultsDiv.innerHTML = "";
+
+      suggestions.forEach(name => {
+        const card = document.createElement("div");
+        card.className = "name-card";
+        card.textContent = name;
+        resultsDiv.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
 
