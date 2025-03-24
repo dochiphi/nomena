@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NameSpark.AI</title>
+  <title>Nomena from Omni Nexus</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -87,7 +87,7 @@
     const prompt = `Generate 5 ${style} company names for a ${industry} business with the following keywords: ${keywords}.`;
 
     try {
-      const response = await fetch("https://api.textcortex.com/hemingwai/generate_text_v3", {
+      const response = await fetch("https://api.textcortex.com/v1", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
