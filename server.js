@@ -31,8 +31,8 @@ app.post("/generate", async (req, res) => {
     const result = response.choices[0].message.content;
     res.json({ names: result.split("\n").filter((name) => name.trim() !== "") });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error generating names");
+  console.error(err);
+  res.status(500).json({ error: "Error generating names" });
   }
 });
 
