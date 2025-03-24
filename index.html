@@ -85,30 +85,45 @@
       const resultsDiv = document.getElementById("results");
       resultsDiv.innerHTML = "Loading...";
 
-     try {
-  const response = await fetch("https://nomena.onrender.com/generate", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ industry, style, keywords })
-  });
+      try {
+        const response = await fetch("https://api.deepseek.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer sk-685e76cb11bf4a4eb37f6c46135bb6a9"
+          },
+          body: JSON.stringify({
+            model: "deepseek-chat",
+            messages: [{
+              role: "user",
+              content: `Suggest 5 unique and creative brand name ideas for a ${style} ${industry} business using these keywords: ${keywords}.`
+            }],
+            temperature: 0.9
+          })
+        });
 
-  const data = await response.json();
+        const data = await response.json();
+        resultsDiv.innerHTML = "";
 
-  if (response.status !== 200) {
-    throw new Error(data.error || "Unknown error from server");
-  }
+        const namesText = data.choices[0].message.content;
+        const names = namesText.split("\n").filter(line => line.trim() !== "");
 
-  resultsDiv.innerHTML = "";
-  data.names.forEach(name => {
-    const card = document.createElement("div");
-    card.className = "name-card";
-    card.textContent = name.replace(/^[0-9]+[.)-]?\s*/, "");
-    resultsDiv.appendChild(card);
-  });
-} catch (error) {
-  resultsDiv.innerHTML = "⚠️ " + error.message;
-  console.error("Error:", error);
-}
+        if (!Array.isArray(names)) {
+          resultsDiv.innerHTML = "⚠️ Failed to generate names. Please try again later.";
+          return;
+        }
+
+        names.forEach(name => {
+          const card = document.createElement("div");
+          card.className = "name-card";
+          card.textContent = name.replace(/^[0-9]+[.)-]?\s*/, "");
+          resultsDiv.appendChild(card);
+        });
+
+      } catch (error) {
+        resultsDiv.innerHTML = "⚠️ Error generating names.";
+        console.error("Error:", error);
+      }
     }
   </script>
 </body>
